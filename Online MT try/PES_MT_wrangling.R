@@ -34,4 +34,10 @@ data_long <- data_clean %>%
          click_time_higher = map2(click_t, time_list, ~ .x > .y),
          trial = map2_dbl(ready_time_lower, click_time_higher, ~ which(.x & .y)))
 
-
+data_long %>% 
+  filter(subject == 1) %>% 
+  ggplot(aes(x = x_pos, y = -y_pos, color = as.factor(trial))) +
+  geom_point() + 
+  geom_path() +
+  theme_bw() +
+  theme(legend.position = 'none')
