@@ -32,7 +32,8 @@ data_long <- data_clean %>%
   unnest(c(x_pos, y_pos, time_list)) %>% 
   mutate(ready_time_lower = map2(ready_t, time_list, ~ .x < .y),
          click_time_higher = map2(click_t, time_list, ~ .x > .y),
-         trial = map2_dbl(ready_time_lower, click_time_higher, ~ which(.x & .y)))
+         trial = map2_dbl(ready_time_lower, click_time_higher, ~ which(.x & .y)),
+         subject_trial = str_c(subject, trial, sep = '_'))
 
 data_long %>% 
   filter(subject == 1) %>% 
@@ -41,3 +42,11 @@ data_long %>%
   geom_path() +
   theme_bw() +
   theme(legend.position = 'none')
+
+# import to mouse-trap:
+
+mouse_trap_data <- mt_import_long(data_long, 
+                                  xpos_label = 'x_pos',
+                                  ypos_label = 'y_pos',
+                                  timestamps_label = 'time_list',
+                                  mt_id_label = 'subject_trial')
